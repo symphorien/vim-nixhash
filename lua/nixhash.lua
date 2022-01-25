@@ -142,6 +142,19 @@ local function run_and_fix(cmd)
   end
   print(count_done .. " hash replaced")
 end
+
+-- return a base32 random hash
+local function random_hash()
+  local res = ""
+  for i = 1,52 do
+    local digit = "0"
+    if math.random(2) == 1 then digit = "1" end
+    res = res..digit
+  end
+  return res
+end
+
 return {
-  run_and_fix = run_and_fix
+  run_and_fix = run_and_fix,
+  random_hash = random_hash
 }

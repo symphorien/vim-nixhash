@@ -43,9 +43,12 @@ index 4322ac9..64ecae6 100644
  }
 ```
 
+A mapping to insert a random base32 sha256 hash is also provided: `<m-h>`. It
+works both in insert mode and normal mode. Define `g:nixhash_disable_bindings`
+to disable these mappings.
+
 # Specifics
 
 * Requires neovim
 * Only replaces hashes in loaded buffers
 * If you use the same fake sha256 (for example all zeros) in several places, they will not be fixed
-* probably needs some adapation for SRI hashes
