@@ -1,0 +1,40 @@
+*nixhash.txt* Plugin to automate TOFU hashes in nix files
+
+This plugin attempts to automate the workflow of writing
+>
+fetchurl {
+  url = "...";
+  sha256 = "0000000000000000000000000000000000000000000000000000";
+}
+
+then running :!nix-build %
+to obtain the dreaded error message:
+
+hash mismatch in fixed-output derivation '...':
+  wanted: sha256:0000000000000000000000000000000000000000000000000000
+  got:    sha256:10v6wmhq3ml13zx9qj9fr3j2pbwzwn4s3lapnhxvxd0kmlx7isw2
+
+and copy paste the correct hash in place of the zeroes.
+
+Instead, you can run :NixHash nix-build % and the hash will be fixed
+automatically by parsing the error message.
+
+===============================================================================
+1. Commands
+
+:NixHash {command}                                                  *:NixHash*
+  Runs command like |:!cmd|. If the command prints nix hash mismatch errors,
+  fix the hashes in the currently loaded buffers. If a hash is present in
+  several places, it will not be fixed. Only buffers with filetype nix or with
+  name ending in .nix are affected. Should support base16, base32 and base64
+  sha256 hashes. If you intend to fix several hashes at the same time, you
+  should pass --keep-going to nix-build.
+
+===============================================================================
+2. Mappings
+
+<M-h>
+  Insert a random base32 sha256 hash. Replaces lib.fakeSha256, but compatible
+  with |:NixHash|.
+  Works in insert mode and normal mode. Set g:nixhash_disable_bindings to
+  disable.
