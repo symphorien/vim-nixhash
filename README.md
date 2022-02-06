@@ -51,4 +51,4 @@ to disable these mappings.
 
 * Requires neovim
 * Only replaces hashes in loaded buffers
-* If you use the same fake sha256 (for example all zeros) in several places, they will not be fixed
+* If you use the same fake sha256 (for example all zeros) in several places, they will not be fixed. That's why `<m-h>` inserts a *random* hash, and not all zeroes.
