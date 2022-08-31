@@ -40,8 +40,11 @@ end
 -- runs this command and returns a table of wanted => got hashes
 local function run_and_parse(cmd)
   local tempfile = vim.fn.tempname()
-  local fullcmd = cmd .. " |& tee >(grep -E '(wanted|got|specified): *sha256' >" .. vim.fn.shellescape(tempfile) .. ")"
-  vim.cmd(":!" .. fullcmd)
+  local fullcmd = cmd .. " |& grep -E '(wanted|got|specified): *sha256' >" .. vim.fn.shellescape(tempfile)
+  local ok = os.execute(fullcmd)
+  if not ok then
+    error("failed to run command")
+  end
   local lines = vim.fn.readfile(tempfile, "", 100)
   local res = {}
   local wanted = nil
