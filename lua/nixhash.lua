@@ -41,7 +41,7 @@ end
 local function run_and_parse(cmd)
   local tempfile = vim.fn.tempname()
   local fullcmd = cmd .. " |& tee >(grep -E '(wanted|got|specified): *sha256' >" .. vim.fn.shellescape(tempfile) .. ")"
-  vim.cmd(":!" .. fullcmd)
+  vim.cmd(":! bash -c " .. vim.fn.shellescape(fullcmd))
   local lines = vim.fn.readfile(tempfile, "", 100)
   local res = {}
   local wanted = nil
