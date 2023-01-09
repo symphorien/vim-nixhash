@@ -144,7 +144,7 @@ local function run_and_fix(cmd)
 end
 
 -- return a base32 random hash
-local function random_hash()
+local function random_base32_hash()
   local res = ""
   for i = 1,52 do
     local digit = "0"
@@ -154,7 +154,19 @@ local function random_hash()
   return res
 end
 
+-- return a random SRI hash
+local function random_sri_hash()
+  local res = "sha256-A"
+  for i = 1,41 do
+    local digit = "0"
+    if math.random(2) == 1 then digit = "1" end
+    res = res..digit
+  end
+  return res.."A="
+end
+
 return {
   run_and_fix = run_and_fix,
-  random_hash = random_hash
+  random_base32_hash = random_base32_hash,
+  random_sri_hash = random_sri_hash
 }

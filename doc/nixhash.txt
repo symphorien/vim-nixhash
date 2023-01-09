@@ -33,8 +33,12 @@ automatically by parsing the error message.
 ===============================================================================
 2. Mappings
 
-<M-h>
+<M-h>, <plug>nixhash_random_base32_hash
   Insert a random base32 sha256 hash. Replaces lib.fakeSha256, but compatible
   with |:NixHash|.
   Works in insert mode and normal mode. Set g:nixhash_disable_bindings to
-  disable.
+  disable binding <M-h>. You can then map the key of you liking to the plug
+  binding.
+
+<M-s>, <plug>nixhash_random_sri_hash
+  Same as <M-h>, but generates a SRI hash.

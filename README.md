@@ -43,9 +43,13 @@ index 4322ac9..64ecae6 100644
  }
 ```
 
-A mapping to insert a random base32 sha256 hash is also provided: `<m-h>`. It
-works both in insert mode and normal mode. Define `g:nixhash_disable_bindings`
-to disable these mappings.
+Mappings to insert random hashes are also provided:
+- `<m-h>` for a base32 hash
+- `<m-s>` for a SRI hash
+They work both in insert mode and normal mode. Define `g:nixhash_disable_bindings`
+to disable these mappings. In this case, you can map them to the keys you want
+with their plug mappings: `<plug>nixhash_random_base32_hash` and
+`<plug>nixhash_random_sri_hash`.
 
 # Specifics
 
