@@ -6,7 +6,7 @@ end
 
 -- converts the hash to base32
 local function toBase32(txt)
-  local base32 = vim.fn.system({"nix-hash", "--type", "sha256", "--to-base32", txt})
+  local base32 = vim.fn.system({"nix", "hash", "convert", "--hash-algo", "sha256", "--to", "nix32", txt})
   local words = vim.fn.split(base32)
   if #words > 1 then error("nix-hash failed: "..base32) end
   local res = words[#words]
@@ -16,7 +16,7 @@ end
 
 -- converts the hash to base16
 local function toBase16(txt)
-  local base16 = vim.fn.system({"nix-hash", "--type", "sha256", "--to-base16", txt})
+  local base16 = vim.fn.system({"nix", "hash", "convert", "--hash-algo", "sha256", "--to", "base16", txt})
   local words = vim.fn.split(base16)
   if #words > 1 then error("nix-hash failed: "..base16) end
   local res = words[#words]
