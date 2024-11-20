@@ -4,9 +4,15 @@ local function parseline(txt)
   return words[#words]
 end
 
+local function runNixHash(args)
+  -- recent versions of nix deprecate nix-hash but nix 2.3 does not have the replacement.
+  -- ignore the message in stderr
+  return vim.fn.system({"sh", "-c", "exec nix-hash \"$@\" 2>/dev/null", "nix-hash", (table.unpack or unpack)(args)})
+end
+
 -- converts the hash to base32
 local function toBase32(txt)
-  local base32 = vim.fn.system({"nix-hash", "--type", "sha256", "--to-base32", txt})
+  local base32 = runNixHash({"--type", "sha256", "--to-base32", txt})
   local words = vim.fn.split(base32)
   if #words > 1 then error("nix-hash failed: "..base32) end
   local res = words[#words]
@@ -16,7 +22,7 @@ end
 
 -- converts the hash to base16
 local function toBase16(txt)
-  local base16 = vim.fn.system({"nix-hash", "--type", "sha256", "--to-base16", txt})
+  local base16 = runNixHash({"--type", "sha256", "--to-base16", txt})
   local words = vim.fn.split(base16)
   if #words > 1 then error("nix-hash failed: "..base16) end
   local res = words[#words]
