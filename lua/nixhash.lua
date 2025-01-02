@@ -61,14 +61,17 @@ local function run_and_parse(cmd)
     debug("parsing line "..line)
     if string.find(line, "got:") then
       if wanted then
-        if res[wanted]
+        local asBase32 = toBase32(wanted)
+        local asBase16 = toBase16(wanted)
+        local asBase64 = toBase64(wanted)
+        if res[asBase64]
         then print("ignoring duplicate "..wanted)
         else
           local replacement = parseline(line)
           debug("replacing "..wanted.." by "..replacement)
-          res[toBase32(wanted)] = replacement
-          res[toBase16(wanted)] = replacement
-          res[toBase64(wanted)] = replacement
+          res[asBase32] = replacement
+          res[asBase16] = replacement
+          res[asBase64] = replacement
         end
         wanted = nil
       else
@@ -156,7 +159,9 @@ local function run_and_fix(cmd)
     if counts[before] == match_count.one then
       replace([[\(sha256[-:]\)\?]]..before, after, buffers[before])
       count_done = count_done + 1
-    end
+    else if counts[before] == match_count.multiple then
+      print("Not replacing "..before..": several occurrences")
+    end end
   end
   print(count_done .. " hash replaced")
 end
