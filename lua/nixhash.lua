@@ -1,3 +1,6 @@
+local function debug(txt)
+  vim.api.nvim_echo({{"vim-nixhash: "..txt.."\n"}}, false, {verbose = true})
+end
 -- parses wanted: sha256:0000000000000000000000000000000000000000000000000000 into the sha256 only
 local function parseline(txt)
   local words = vim.fn.split(txt)
@@ -17,6 +20,7 @@ local function toBase32(txt)
   if #words > 1 then error("nix-hash failed: "..base32) end
   local res = words[#words]
   if not string.match(res, '^[0-9a-z]+$') then error("nix-hash returned unexpected result:"..base32) end
+  debug(txt.." to base 32 -> "..res)
   return res
 end
 
@@ -27,6 +31,7 @@ local function toBase16(txt)
   if #words > 1 then error("nix-hash failed: "..base16) end
   local res = words[#words]
   if not string.match(res, '^[0-9a-f]+$') then error("nix-hash returned unexpected result:"..base16) end
+  debug(txt.." to base 16 -> "..res)
   return res
 end
 
@@ -40,6 +45,7 @@ local function toBase64(txt)
   if #words > 1 then error("failed to convert hash to base64: "..out) end
   local res = words[#words]
   if not string.match(res, '^[0-9A-Za-z+/]+=$') then error("conversion to base64 returned unexpected result:"..out.."end") end
+  debug(txt.." to base 64 -> "..res)
   return res
 end
 
@@ -52,12 +58,14 @@ local function run_and_parse(cmd)
   local res = {}
   local wanted = nil
   for _, line in ipairs(lines) do
+    debug("parsing line "..line)
     if string.find(line, "got:") then
       if wanted then
         if res[wanted]
         then print("ignoring duplicate "..wanted)
         else
           local replacement = parseline(line)
+          debug("replacing "..wanted.." by "..replacement)
           res[toBase32(wanted)] = replacement
           res[toBase16(wanted)] = replacement
           res[toBase64(wanted)] = replacement
@@ -78,6 +86,7 @@ local function run_and_parse(cmd)
       end
     end
   end
+  debug("final replacements: "..vim.inspect(res))
   return res
 end
 local match_count = {
@@ -103,6 +112,7 @@ local function buffer_match_count(pattern, buffer)
 end
 -- replaces this pattern by another in the specified buffer
 local function replace(pattern, replacement_pattern, buffer)
+  debug("replacing "..pattern.." by "..replacement_pattern.." in buffer "..buffer)
   local cmd = ":%s/"..vim.fn.escape(pattern, "/").."/"..vim.fn.escape(replacement_pattern, "/").."/"
   vim.api.nvim_buf_call(buffer, function ()
     vim.cmd(cmd)
@@ -128,10 +138,12 @@ local function run_and_fix(cmd)
   local buffers = {}
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_loaded(buf) and is_nix_buffer(buf) then
+      debug("processing buffer "..buf)
       for before, _ in pairs(replacements) do
         local current_count = counts[before] or 0
         if current_count <= match_count.one then
           local count = buffer_match_count(before, buf)
+          debug("found "..before.." "..count.." times in buffer "..buf)
           counts[before] = current_count + count
           if count == match_count.one then
             buffers[before] = buf

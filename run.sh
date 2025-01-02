@@ -1,2 +1,2 @@
 #!/bin/sh
-exec nvim -u fixtures/init.vim fixtures/mismatch.nix
+exec nvim -V/tmp/nvim.log -u fixtures/init.vim fixtures/mismatch.nix
