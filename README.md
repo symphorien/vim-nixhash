@@ -56,3 +56,4 @@ with their plug mappings: `<plug>nixhash_random_base32_hash` and
 * Requires neovim
 * Only replaces hashes in loaded buffers
 * If you use the same fake sha256 (for example all zeros) in several places, they will not be fixed. That's why `<m-h>` inserts a *random* hash, and not all zeroes.
+* Requires `basenc` and `base64` from coreutils, available from [pkgs.coreutils](https://search.nixos.org/packages?query=coreutils#show=coreutils)
