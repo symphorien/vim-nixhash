@@ -51,6 +51,16 @@ to disable these mappings. In this case, you can map them to the keys you want
 with their plug mappings: `<plug>nixhash_random_base32_hash` and
 `<plug>nixhash_random_sri_hash`.
 
+You can also define your own keybinds in lua to insert random hashes:
+```lua
+vim.keymap.set(
+  "n",
+  "<leader>nh",
+  "<Plug>nixhash_random_sri_hash",
+  { desc = "Insert random SRI hash" }
+)
+
+```
 # Specifics
 
 * Requires neovim
